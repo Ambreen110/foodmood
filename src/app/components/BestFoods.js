@@ -29,11 +29,11 @@ const BestFoods = () => {
   }, [selectedCuisine]); // Fetch when selectedCuisine changes
 
   return (
-    <div className="container mx-auto my-6 bg-cream">
+    <div className="container mx-auto my-6 bg-cream px-4"> {/* Added padding for mobile */}
       <h2 className="text-secondary text-xl font-bold mb-4 text-center">Best Foods</h2>
       
       {/* Cuisine buttons */}
-      <div className="flex justify-between mb-4 w-full">
+      <div className="flex flex-wrap justify-center mb-4 w-full"> {/* Center buttons */}
         {cuisines.map(cuisine => (
           <button 
             key={cuisine}
@@ -46,10 +46,10 @@ const BestFoods = () => {
       </div>
       
       {/* Flex container for food cards, allowing wrapping */}
-      <div className="flex flex-wrap justify-between">
+      <div className="flex flex-wrap justify-center">
         {foods.length > 0 ? (
           foods.map((food) => (
-            <Link key={food.idMeal} href={`/recipes/${food.idMeal}`} className="flex-shrink-0 w-1/4 p-2"> {/* Set width for each food card */}
+            <Link key={food.idMeal} href={`/recipes/${food.idMeal}`} className="flex-shrink-0 w-full sm:w-1/2 md:w-1/4 p-2"> {/* Responsive widths */}
               <div className="h-60"> {/* Set a specific height for the food card */}
                 <BackgroundGradient className="rounded-[22px] h-full flex flex-col bg-orange-300 text-blue-500 dark:bg-zinc-900">
                   <Image 
