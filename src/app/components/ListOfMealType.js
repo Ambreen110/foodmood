@@ -58,10 +58,10 @@ const ListOfMealType = () => {
     router.push(`/recipes/${idMeal}`);
   };
 
-  // Fetch recipes on component mount
+  // Fetch recipes on component mount or when selectedType changes
   useEffect(() => {
-    fetchRecipes(selectedType); // Fetch 'Miscellaneous' recipes initially
-  }, []);
+    fetchRecipes(selectedType); // Fetch recipes based on the current selected type
+  }, [selectedType]); // Add selectedType to the dependency array
 
   return (
     <div className="container mx-auto my-6 pt-16">
