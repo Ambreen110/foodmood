@@ -1,9 +1,9 @@
+// pages/api/recipe/[id].js
 import { NextResponse } from 'next/server';
 
 export async function GET(req, { params }) {
   const { id } = params; // Get the dynamic id from the request parameters
-  const apiKey = process.env.SPOONACULAR_API_KEY; // Store API key in .env
-  const apiURL = `https://api.spoonacular.com/recipes/${id}/information?apiKey=${apiKey}`; // Adjust URL to fetch specific recipe details
+  const apiURL = `https://www.themealdb.com/api/json/v1/1/lookup.php?i=${id}`;
 
   try {
     const response = await fetch(apiURL);

@@ -2,45 +2,41 @@
 
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation'; // Change import to next/navigation
+import { useRouter } from 'next/navigation'; // For navigation
 import { BackgroundGradient } from './ui/background-gradient';
 
 const ListOfMealType = () => {
   const mealTypes = [
-    'Main Course',
-    'Side Dish',
+    'Miscellaneous',
+    'Chicken',
     'Dessert',
-    'Appetizer',
-    'Salad',
-    'Bread',
+    'Lamb',
+    'Beef',
+    'Pasta',
     'Breakfast',
-    'Soup',
-    'Beverage',
-    'Sauce',
-    'Marinade',
-    'Fingerfood',
-    'Snack',
-    'Drink'
+    'Seafood',
+    'Side',
+    'Starter',
+    'Vegetarian',
+    'Goat',
   ];
 
-  const [selectedType, setSelectedType] = useState('Main Course');
+  const [selectedType, setSelectedType] = useState('Miscellaneous'); // Default to 'Miscellaneous'
   const [recipes, setRecipes] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [showMore, setShowMore] = useState(false);
-  const router = useRouter(); // Initialize the router
-
-  const API_KEY = 'b961493cf862480a9824af5f9fd2dde8';
+  const [showMore, setShowMore] = useState(false); // State to handle dropdown visibility
+  const router = useRouter(); // Router for navigation
 
   const fetchRecipes = async (mealType) => {
     setLoading(true);
     try {
-      const res = await fetch(`https://api.spoonacular.com/recipes/complexSearch?type=${mealType}&apiKey=${API_KEY}`);
+      const res = await fetch(`https://www.themealdb.com/api/json/v1/1/filter.php?c=${mealType}`);
       if (!res.ok) {
         throw new Error('Failed to fetch recipes');
       }
 
       const data = await res.json();
-      setRecipes(data.results.slice(0, 4)); // Limit to 4 recipes
+      setRecipes(data.meals.slice(0, 4)); // Limit to 4 recipes
     } catch (error) {
       console.error('Error fetching recipes:', error);
     } finally {
@@ -57,21 +53,24 @@ const ListOfMealType = () => {
     setShowMore(!showMore);
   };
 
-  const handleRecipeClick = (recipeId) => {
-    router.push(`/recipes/${recipeId}`); // Navigate to the recipe page with the meal ID
+  const handleRecipeClick = (idMeal) => {
+    // Navigate to the recipe page
+    router.push(`/recipes/${idMeal}`);
   };
 
+  // Fetch recipes on component mount
   useEffect(() => {
-    fetchRecipes(selectedType);
+    fetchRecipes(selectedType); // Fetch 'Miscellaneous' recipes initially
   }, []);
 
   return (
     <div className="container mx-auto my-6 pt-16">
-      <h2 className="text-secondary text-xl font-bold mb-4">
+      <h2 className="text-secondary text-xl font-bold mb-4 text-center">
         Select a Meal Type
       </h2>
 
       <div className="relative">
+        {/* Meal Type Buttons */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
           {mealTypes.slice(0, showMore ? mealTypes.length : 4).map((type) => (
             <button
@@ -84,6 +83,7 @@ const ListOfMealType = () => {
           ))}
         </div>
 
+        {/* See More Button */}
         <button
           onClick={toggleShowMore}
           className="flex items-center text-primary hover:text-secondary transition"
@@ -100,18 +100,23 @@ const ListOfMealType = () => {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
         {recipes.length > 0 ? (
           recipes.map((recipe) => (
-            <div key={recipe.id} className="bg-white shadow-md rounded-lg p-4" onClick={() => handleRecipeClick(recipe.id)}>
+            <div
+              key={recipe.idMeal}
+              onClick={() => handleRecipeClick(recipe.idMeal)} // Handle recipe click
+              className="cursor-pointer bg-white shadow-md rounded-lg p-4"
+            >
               <BackgroundGradient className="rounded-[22px] bg-white dark:bg-zinc-900">
                 <Image 
-                  src={recipe.image} 
-                  alt={recipe.title} 
+                  src={recipe.strMealThumb} // API provides 'strMealThumb' for image
+                  alt={recipe.strMeal} // API provides 'strMeal' for title
                   width={300} 
                   height={200} 
-                  className="w-full h-32 object-cover rounded-t-lg" 
+                  className="w-full h-full object-cover rounded-lg" 
                 />
+                {/* Scrollable title container */}
                 <div className="h-16 overflow-hidden">
                   <h3 className="text-lg font-semibold mt-2 whitespace-nowrap overflow-hidden text-ellipsis">
-                    {recipe.title}
+                    {recipe.strMeal}
                   </h3>
                 </div>
               </BackgroundGradient>
