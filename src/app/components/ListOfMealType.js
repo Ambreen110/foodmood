@@ -36,7 +36,7 @@ const ListOfMealType = () => {
       }
 
       const data = await res.json();
-      setRecipes(data.meals.slice(0, 4)); // Limit to 4 recipes
+      setRecipes(data.meals.slice(0, 8)); // Limit to 4 recipes
     } catch (error) {
       console.error('Error fetching recipes:', error);
     } finally {
